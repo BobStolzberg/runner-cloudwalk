@@ -1,0 +1,50 @@
+- name: CLC | Generate Server Admin Password
+  command: openssl rand -base64 15
+  register: serverpass
+  changed_when: False
+
+- name: CLC | Create APMU Group
+  clc_group:
+    name: "{{ group_name }}"
+    description: "{{ group_description }}"
+    location: "{{ datacenter }}"
+    state: present
+
+- name: CLC | Build APMU Server if Needed
+  clc_server:
+    name: "{{ server_name }}"
+    description: "{{ server_description }}"
+    location: "{{ datacenter }}"
+    template: va1dynaapmu02
+    password: "{{ serverpass.stdout }}"
+    group: "{{ group_name }}"
+    count_group: "{{ group_name }}"
+    exact_count: "{{ group_size }}"
+    network_id: "{{ network_id }}"
+    cpu: "{{ cpu }}"
+    memory: "{{ memory }}"
+    type: "{{ type }}"
+    storage_type: "{{ storage_type }}"
+    #additional_disks: "{{ disk }}"
+  register: APMU
+
+- name: Add New Servers to an in-memory Group
+  add_host:
+    name={{ item.name }}
+    groupname={{ group_name }}
+  with_items: APMU.servers
+
+#- name: Add Public IP to Server
+#  hosts: localhost
+#  gather_facts: False
+#  connection: local
+#  tasks:
+#    - name: Create Public IP For Servers
+#      clc_publicip:
+#        protocol: 'TCP'
+#        ports:
+#            - 3389
+#        server_ids: "{{ item.name }}"
+#        state: present
+#      with_flattened: APMU.servers
+#      register: clc

@@ -1,0 +1,6 @@
+---
+
+- name: Build Dynatrace APMU server
+  hosts: localhost
+  roles:
+    - build-apmu-server
