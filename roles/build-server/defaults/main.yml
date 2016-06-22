@@ -1,9 +1,9 @@
 group_size: 1
-group_name: FILLMEIN
-group_description: FILLMEIN
-datacenter: FILLMEIN
+group_name: RTEST
+group_description: runner test
+datacenter: VA1
 server_name: DEMO
-server_description: FILLMEIN
+server_description: demo
 type: standard
 storage_type: standard
 cpu: 1
