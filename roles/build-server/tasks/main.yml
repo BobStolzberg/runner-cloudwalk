@@ -3,19 +3,19 @@
   register: serverpass
   changed_when: False
 
-- name: CLC | Create APMU Group
+- name: CLC | Create Group
   clc_group:
     name: "{{ group_name }}"
     description: "{{ group_description }}"
     location: "{{ datacenter }}"
     state: present
 
-- name: CLC | Build APMU Server if Needed
+- name: CLC | Build Server if Needed
   clc_server:
     name: "{{ server_name }}"
     description: "{{ server_description }}"
     location: "{{ datacenter }}"
-    template: va1dynaapmu02
+    template: ubuntu-14-64
     password: "{{ serverpass.stdout }}"
     group: "{{ group_name }}"
     count_group: "{{ group_name }}"
@@ -26,15 +26,15 @@
     type: "{{ type }}"
     storage_type: "{{ storage_type }}"
     #additional_disks: "{{ disk }}"
-  register: APMU
+  register: DEMO
 
 - name: Add New Servers to an in-memory Group
   add_host:
     name={{ item.name }}
     groupname={{ group_name }}
-  with_items: APMU.servers
+  with_items: MY.servers
 
-#- name: Add Public IP to Server
+# - name: Add Public IP to Server
 #  hosts: localhost
 #  gather_facts: False
 #  connection: local
@@ -43,8 +43,35 @@
 #      clc_publicip:
 #        protocol: 'TCP'
 #        ports:
-#            - 3389
+#            - 80
+#        server_ids:
+#            - UC1WFADTEST01
+#            - UC1WFADTEST02
+#        source_restrictions:
+#            - 70.100.60.140/32
+#            - 71.100.60.0/24
+#        state: present
+#      register: clc
+
+### LOAD BALANCER
+# - name: Create load balancer on a data center
+#  hosts: localhost
+#  gather_facts: False
+#  connection: local
+#  tasks:
+#    - name: create load balancer
+#      clc_loadbalancer:
+#        alias: WFAD
+#        location: WA1
+#        name: testlb
+#        description: testlb
+#        state:  present
+#        port: 80
+#        nodes:
+#          - {'ipAddress': '10.82.152.18', 'privatePort': 11}
+#          - {'ipAddress': '10.82.152.19', 'privatePort': 22}
+#      register: clc
 #        server_ids: "{{ item.name }}"
 #        state: present
-#      with_flattened: APMU.servers
+#      with_flattened: MY.servers
 #      register: clc

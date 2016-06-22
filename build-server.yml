@@ -1,6 +1,6 @@
 ---
 
-- name: Build Dynatrace APMU server
+- name: Build a server
   hosts: localhost
   roles:
-    - build-apmu-server
+    - build-server

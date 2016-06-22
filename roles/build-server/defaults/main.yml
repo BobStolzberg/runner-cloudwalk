@@ -1,0 +1,10 @@
+group_size: 1
+group_name: FILLMEIN
+group_description: FILLMEIN
+datacenter: FILLMEIN
+server_name: DEMO
+server_description: FILLMEIN
+type: standard
+storage_type: standard
+cpu: 1
+memory: 4
