@@ -1,6 +1,6 @@
 ---
 
-- name: Build a server
+- name: Build a server.
   hosts: localhost
   roles:
     - build-server
